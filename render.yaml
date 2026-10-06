@@ -1,0 +1,132 @@
+# Render Blueprint — web + worker + Redis + nightly retention cron.
+# Docs: https://render.com/docs/blueprint-spec
+#
+# Postgres / Auth / Storage: attach a Supabase project and paste secrets in the
+# Render dashboard (DATABASE_URL, SUPABASE_*). Leave OPENAI_API_KEY empty so the
+# app stays on mock providers at zero cost until you personally demo.
+
+services:
+  - type: web
+    name: ama-api
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: .
+    plan: starter
+    healthCheckPath: /health/live
+    # Run Alembic against Supabase Postgres before each deploy.
+    preDeployCommand: alembic upgrade head
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: AUTH_MODE
+        value: supabase
+      - key: JOB_RUNNER
+        value: rq
+      - key: AUDIO_PREPROCESS_MODE
+        value: auto
+      - key: STORAGE_BACKEND
+        value: supabase
+      - key: SEED_DEMO_ON_STARTUP
+        value: "false"
+      - key: MAX_UPLOADS_PER_IP_PER_DAY
+        value: "20"
+      - key: MAX_MEETINGS_PER_USER
+        value: "50"
+      - key: MAX_QUESTIONS_PER_DAY
+        value: "100"
+      - key: AUDIO_RETENTION_DAYS
+        value: "30"
+      - key: SUPABASE_STORAGE_BUCKET
+        value: meeting-audio
+      - key: APP_BASE_URL
+        sync: false
+      - key: SECRET_KEY
+        generateValue: true
+      # Supabase Postgres connection string (include ?sslmode=require).
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        fromService:
+          name: ama-redis
+          type: redis
+          property: connectionString
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: SUPABASE_JWT_SECRET
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      # Leave unset / empty for mock providers (zero OpenAI cost).
+      - key: OPENAI_API_KEY
+        sync: false
+
+  - type: worker
+    name: ama-worker
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: .
+    dockerCommand: python -m app.workers.rq_worker
+    plan: starter
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: AUTH_MODE
+        value: supabase
+      - key: JOB_RUNNER
+        value: rq
+      - key: AUDIO_PREPROCESS_MODE
+        value: auto
+      - key: STORAGE_BACKEND
+        value: supabase
+      - key: SUPABASE_STORAGE_BUCKET
+        value: meeting-audio
+      - key: SECRET_KEY
+        fromService:
+          name: ama-api
+          type: web
+          envVarKey: SECRET_KEY
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        fromService:
+          name: ama-redis
+          type: redis
+          property: connectionString
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+
+  - type: cron
+    name: ama-retention-purge
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: .
+    dockerCommand: python -m app.scripts.cleanup_expired_audio
+    plan: starter
+    schedule: "0 3 * * *"
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: STORAGE_BACKEND
+        value: supabase
+      - key: SUPABASE_STORAGE_BUCKET
+        value: meeting-audio
+      - key: AUDIO_RETENTION_DAYS
+        value: "30"
+      - key: DATABASE_URL
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+
+  - type: redis
+    name: ama-redis
+    plan: starter
+    maxmemoryPolicy: noeviction
+    ipAllowList: []

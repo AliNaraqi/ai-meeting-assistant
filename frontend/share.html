@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shared meeting · AI Meeting Assistant</title>
+    <script src="/static/js/theme-boot.js"></script>
+    <link rel="stylesheet" href="/static/css/tokens.css" />
+    <link rel="stylesheet" href="/static/css/base.css" />
+    <link rel="stylesheet" href="/static/css/components.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <p class="brand"><a href="/">AI Meeting Assistant</a></p>
+      <nav class="site-nav" aria-label="Share">
+        <a href="/login">Sign in</a>
+        <button type="button" id="theme-toggle" class="button-quiet">Theme</button>
+      </nav>
+    </header>
+
+    <main id="main" class="dashboard">
+      <section class="dashboard-intro">
+        <h1 id="share-title">Shared meeting</h1>
+        <p id="share-meta" class="hero-lead"></p>
+      </section>
+      <p id="page-error" class="form-error" role="alert" aria-live="assertive" hidden></p>
+      <div id="share-loading"></div>
+
+      <section class="panel stack-form" id="insights-panel" hidden>
+        <h2>Overview</h2>
+        <div id="insight-summary"></div>
+        <h3>Decisions</h3>
+        <ul id="insight-decisions" class="meeting-list"></ul>
+        <h3>Actions</h3>
+        <ul id="insight-actions" class="meeting-list"></ul>
+      </section>
+
+      <section class="panel stack-form" id="transcript-panel" hidden style="margin-top: 1.5rem">
+        <h2>Transcript</h2>
+        <ul id="transcript-list" class="meeting-list"></ul>
+      </section>
+    </main>
+
+    <script type="module" src="/static/js/share.js"></script>
+  </body>
+</html>

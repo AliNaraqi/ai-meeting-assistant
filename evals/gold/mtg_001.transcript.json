@@ -1,0 +1,33 @@
+{
+  "fixture_id": "mtg_001",
+  "segments": [
+    {
+      "ordinal": 0,
+      "speaker": "Mina",
+      "start_ms": 800,
+      "end_ms": 5200,
+      "text": "Thanks everyone. Let us review the data migration first."
+    },
+    {
+      "ordinal": 1,
+      "speaker": "Noah",
+      "start_ms": 5400,
+      "end_ms": 9200,
+      "text": "I will send the revised dataset by Friday."
+    },
+    {
+      "ordinal": 2,
+      "speaker": "Mina",
+      "start_ms": 9500,
+      "end_ms": 12800,
+      "text": "Should we use Azure for the staging environment?"
+    },
+    {
+      "ordinal": 3,
+      "speaker": "Noah",
+      "start_ms": 13000,
+      "end_ms": 16200,
+      "text": "We decided to use Azure for staging."
+    }
+  ]
+}

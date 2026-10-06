@@ -1,0 +1,108 @@
+# Local stack for Phase 0 / Step 2:
+#   docker compose up --build
+# App: http://localhost:8000  |  Docs: http://localhost:8000/docs
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: meeting
+      POSTGRES_PASSWORD: meeting
+      POSTGRES_DB: meeting_assistant
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U meeting -d meeting_assistant"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    command:
+      [
+        "uvicorn",
+        "app.main:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000",
+        "--reload",
+      ]
+    env_file:
+      - .env.example
+    environment:
+      APP_ENV: development
+      APP_BASE_URL: http://localhost:8000
+      AUTH_MODE: dev
+      SECRET_KEY: local-dev-secret-change-me
+      JOB_RUNNER: rq
+      AUDIO_PREPROCESS_MODE: auto
+      DATABASE_URL: postgresql+psycopg://meeting:meeting@db:5432/meeting_assistant
+      REDIS_URL: redis://redis:6379/0
+      LOCAL_STORAGE_DIR: /app/data/audio
+      SEED_DEMO_ON_STARTUP: "true"
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/app:/app/backend/app
+      - ./frontend:/app/frontend
+      - ./data/audio:/app/data/audio
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  worker:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    command: ["python", "-m", "app.workers.rq_worker"]
+    env_file:
+      - .env.example
+    environment:
+      APP_ENV: development
+      AUTH_MODE: dev
+      SECRET_KEY: local-dev-secret-change-me
+      JOB_RUNNER: rq
+      AUDIO_PREPROCESS_MODE: auto
+      DATABASE_URL: postgresql+psycopg://meeting:meeting@db:5432/meeting_assistant
+      REDIS_URL: redis://redis:6379/0
+      LOCAL_STORAGE_DIR: /app/data/audio
+    volumes:
+      - ./backend/app:/app/backend/app
+      - ./data/audio:/app/data/audio
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  redisdata:

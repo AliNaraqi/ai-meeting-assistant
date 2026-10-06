@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Status · AI Meeting Assistant</title>
+    <script src="/static/js/theme-boot.js"></script>
+    <link rel="stylesheet" href="/static/css/tokens.css" />
+    <link rel="stylesheet" href="/static/css/base.css" />
+    <link rel="stylesheet" href="/static/css/components.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <p class="brand"><a href="/">AI Meeting Assistant</a></p>
+      <nav class="site-nav" aria-label="Status">
+        <a href="/">Home</a>
+        <a href="/health/live">Liveness</a>
+        <a href="/api/v1/status">JSON</a>
+        <button type="button" id="theme-toggle" class="button-quiet">Theme</button>
+      </nav>
+    </header>
+
+    <main id="main" class="dashboard">
+      <section class="dashboard-intro" aria-labelledby="status-heading">
+        <h1 id="status-heading">Ops status</h1>
+        <p class="hero-lead">Provider mode, queue depth, and the most recent processing job.</p>
+      </section>
+
+      <p id="status-error" class="form-error" role="alert" hidden></p>
+      <div id="status-state"></div>
+
+      <section class="panel">
+        <dl id="status-list" class="status-grid"></dl>
+      </section>
+    </main>
+
+    <script type="module">
+      import { initThemeToggle } from "/static/js/theme.js";
+      import { clearState, renderState, showError } from "/static/js/ui.js";
+
+      initThemeToggle();
+
+      const labels = {
+        provider_mode: "Provider mode",
+        queue_length: "Queue length",
+        last_job_at: "Last job time",
+        last_job_status: "Last job status",
+        jobs_total: "Jobs total",
+        job_runner: "Job runner",
+        environment: "Environment",
+        auth_mode: "Auth mode",
+        storage_backend: "Storage",
+        version: "Version",
+      };
+
+      function row(term, value) {
+        const dt = document.createElement("dt");
+        dt.textContent = term;
+        const dd = document.createElement("dd");
+        dd.textContent = value == null || value === "" ? "—" : String(value);
+        return [dt, dd];
+      }
+
+      async function load() {
+        const list = document.getElementById("status-list");
+        const errorEl = document.getElementById("status-error");
+        const stateEl = document.getElementById("status-state");
+        showError(errorEl, "");
+        if (!list.children.length) {
+          renderState(stateEl, { variant: "loading", title: "Loading status…" });
+        }
+        try {
+          const response = await fetch("/api/v1/status");
+          const data = await response.json();
+          if (!response.ok) throw new Error(data?.error?.message || "Status unavailable");
+          clearState(stateEl);
+          stateEl.hidden = true;
+          list.replaceChildren();
+          for (const [key, label] of Object.entries(labels)) {
+            for (const node of row(label, data[key])) list.append(node);
+          }
+        } catch (error) {
+          list.replaceChildren();
+          renderState(stateEl, {
+            variant: "error",
+            title: "Status unavailable",
+            body: error.message || "Could not reach /api/v1/status.",
+            actionLabel: "Retry",
+            onAction: () => void load(),
+          });
+        }
+      }
+
+      load();
+      setInterval(load, 15000);
+    </script>
+    <style>
+      .status-grid {
+        display: grid;
+        grid-template-columns: minmax(10rem, 14rem) 1fr;
+        gap: 0.65rem 1.25rem;
+        margin: 0;
+      }
+      .status-grid dt {
+        margin: 0;
+        color: var(--color-text-muted);
+        font-weight: 600;
+      }
+      .status-grid dd {
+        margin: 0;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      }
+    </style>
+  </body>
+</html>

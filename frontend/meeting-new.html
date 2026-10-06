@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>New meeting · AI Meeting Assistant</title>
+    <script src="/static/js/theme-boot.js"></script>
+    <link rel="stylesheet" href="/static/css/tokens.css" />
+    <link rel="stylesheet" href="/static/css/base.css" />
+    <link rel="stylesheet" href="/static/css/components.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <p class="brand"><a href="/app">AI Meeting Assistant</a></p>
+      <nav class="site-nav" aria-label="New meeting">
+        <span id="user-email" class="user-chip"></span>
+        <a href="/app">Dashboard</a>
+        <button type="button" id="theme-toggle" class="button-quiet">Theme</button>
+        <button type="button" id="sign-out" class="button-quiet">Sign out</button>
+      </nav>
+    </header>
+
+    <main id="main" class="dashboard">
+      <section class="dashboard-intro">
+        <h1>New meeting</h1>
+        <p class="hero-lead">
+          Confirm consent, then record in the browser or upload an existing audio file.
+        </p>
+      </section>
+
+      <p id="page-error" class="form-error" hidden></p>
+
+      <section class="dashboard-grid">
+        <form id="meta-form" class="stack-form panel">
+          <h2>Details</h2>
+          <label>
+            Title
+            <input type="text" name="title" maxlength="200" required />
+          </label>
+          <label>
+            Type
+            <select name="meeting_type">
+              <option value="general">General</option>
+              <option value="standup">Stand-up</option>
+              <option value="interview">Interview</option>
+              <option value="sales">Sales</option>
+              <option value="research">Research</option>
+              <option value="lecture">Lecture</option>
+            </select>
+          </label>
+          <label>
+            Language
+            <input type="text" name="language" maxlength="32" placeholder="en" />
+          </label>
+          <label class="checkbox-row">
+            <input type="checkbox" id="consent" name="consent" required />
+            <span>I confirm every participant consented to recording.</span>
+          </label>
+        </form>
+
+        <div class="panel stack-form">
+          <h2>Record</h2>
+          <p class="meeting-meta">
+            State: <span id="recorder-state">idle</span> · <span id="timer">00:00</span>
+          </p>
+          <meter id="level-meter" min="0" max="1" value="0"></meter>
+          <label class="checkbox-row">
+            <input type="checkbox" id="tab-audio" />
+            <span>Capture tab/system audio instead of microphone (browser-dependent)</span>
+          </label>
+          <div class="button-row">
+            <button type="button" id="btn-start" class="button-primary">Start</button>
+            <button type="button" id="btn-pause" class="button-quiet">Pause</button>
+            <button type="button" id="btn-resume" class="button-quiet">Resume</button>
+            <button type="button" id="btn-stop" class="button-quiet">Stop</button>
+            <button type="button" id="btn-discard" class="button-quiet">Discard</button>
+          </div>
+          <audio id="preview" controls hidden></audio>
+
+          <h2>Or upload a file</h2>
+          <div id="dropzone" class="dropzone">
+            <p>Drag and drop audio here, or choose a file.</p>
+            <input
+              id="file-input"
+              type="file"
+              accept=".webm,.wav,.mp3,.m4a,.mp4,.mpeg,.mpga,audio/*"
+            />
+          </div>
+
+          <button type="button" id="btn-upload" class="button-primary">Save meeting audio</button>
+          <p id="upload-status" class="meeting-meta"></p>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="/static/js/meeting-new.js"></script>
+  </body>
+</html>

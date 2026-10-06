@@ -1,0 +1,55 @@
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+*.egg-info/
+.eggs/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Node / frontend tooling (if added later)
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# OS and editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Runtime / local data
+uploads/
+tmp/
+data/
+backend/data/
+backend/tests/_audio_tmp/
+*.log
+.redis/
+postgres-data/
+
+# Eval artifacts with sensitive provider logs
+evals/results/*
+!evals/results/.gitkeep
+
+# Docker
+*.pid

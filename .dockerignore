@@ -1,0 +1,33 @@
+# Environment and secrets
+.env
+.env.local
+
+# Git / editor
+.git
+.gitignore
+.cursor
+.vscode
+.idea
+
+# Python caches and local envs
+**/__pycache__
+**/*.py[cod]
+.venv
+venv
+.env
+.pytest_cache
+.mypy_cache
+.ruff_cache
+*.egg-info
+
+# Docs and evals not needed in the API image
+evals
+docs
+scripts
+*.md
+!README.md
+
+# Local data
+uploads
+tmp
+postgres-data

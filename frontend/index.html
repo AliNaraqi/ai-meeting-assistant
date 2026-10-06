@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Meeting Assistant</title>
+    <script src="/static/js/theme-boot.js"></script>
+    <link rel="stylesheet" href="/static/css/tokens.css" />
+    <link rel="stylesheet" href="/static/css/base.css" />
+    <link rel="stylesheet" href="/static/css/components.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <p class="brand">AI Meeting Assistant</p>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="#features">Features</a>
+        <a href="/status">Status</a>
+        <a href="/login">Sign in</a>
+        <a href="/docs">API docs</a>
+        <button type="button" id="theme-toggle" class="button-quiet">Theme</button>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero" aria-labelledby="hero-heading">
+        <h1 id="hero-heading">AI Meeting Assistant</h1>
+        <p class="hero-lead">
+          Capture a meeting, get a searchable transcript, and turn the discussion into clear
+          decisions and accountable next steps — with evidence you can jump back to.
+        </p>
+        <p class="hero-cta button-row">
+          <button type="button" id="view-demo" class="button-primary">View demo meeting</button>
+          <a class="button-quiet" href="/login">Sign in</a>
+        </p>
+        <p id="demo-status" class="meeting-meta" aria-live="polite" hidden></p>
+        <p class="hero-note">
+          Consent-first recording · private storage · grounded summaries and Q&amp;A
+        </p>
+      </section>
+
+      <section id="features" class="features" aria-labelledby="features-heading">
+        <h2 id="features-heading">What you can do</h2>
+        <ul>
+          <li>Browser recording and file upload with consent confirmation</li>
+          <li>Speaker-aware transcripts with timestamps and search</li>
+          <li>Decisions, action items, exports, and permanent deletion</li>
+          <li>Ask questions that cite transcript evidence or abstain</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Privacy-conscious meeting intelligence · MIT License</p>
+    </footer>
+    <script type="module" src="/static/js/landing.js"></script>
+  </body>
+</html>

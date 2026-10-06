@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard · AI Meeting Assistant</title>
+    <script src="/static/js/theme-boot.js"></script>
+    <link rel="stylesheet" href="/static/css/tokens.css" />
+    <link rel="stylesheet" href="/static/css/base.css" />
+    <link rel="stylesheet" href="/static/css/components.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <p class="brand"><a href="/app">AI Meeting Assistant</a></p>
+      <nav class="site-nav" aria-label="Dashboard">
+        <a class="button-primary" href="/meetings/new">New meeting</a>
+        <span id="user-email" class="user-chip"></span>
+        <span id="usage-chip" class="user-chip" hidden aria-live="polite"></span>
+        <button type="button" id="theme-toggle" class="button-quiet">Theme</button>
+        <button type="button" id="sign-out" class="button-quiet">Sign out</button>
+      </nav>
+    </header>
+
+    <main id="main" class="dashboard">
+      <section class="dashboard-intro" aria-labelledby="dash-heading">
+        <h1 id="dash-heading">Your meetings</h1>
+        <p class="hero-lead">
+          Create a meeting, upload audio, then process it into a speaker-aware transcript.
+        </p>
+      </section>
+
+      <p id="dashboard-error" class="form-error" role="alert" aria-live="assertive" hidden></p>
+
+      <section class="panel">
+        <h2>Recent</h2>
+        <div id="empty-state" class="empty-state"></div>
+        <ul id="meeting-list" class="meeting-list"></ul>
+      </section>
+
+      <section id="insights-panel" class="panel" hidden style="margin-top: 1.5rem">
+        <h2>Overview</h2>
+        <div id="insight-summary"></div>
+        <h3>Decisions</h3>
+        <ul id="insight-decisions" class="meeting-list"></ul>
+        <h3>Actions</h3>
+        <ul id="insight-actions" class="meeting-list"></ul>
+      </section>
+
+      <section id="transcript-panel" class="panel" hidden style="margin-top: 1.5rem">
+        <h2>Transcript</h2>
+        <ul id="transcript-list" class="meeting-list"></ul>
+      </section>
+    </main>
+
+    <script type="module" src="/static/js/dashboard.js"></script>
+  </body>
+</html>

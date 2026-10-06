@@ -1,0 +1,23 @@
+{
+  "fixture_id": "mtg_001",
+  "cases": [
+    {
+      "question": "Who will send the revised dataset?",
+      "answer_status": "supported",
+      "acceptable_answers": ["dataset", "Friday"],
+      "evidence_ordinals": [1]
+    },
+    {
+      "question": "Did we decide to use Azure for staging?",
+      "answer_status": "supported",
+      "acceptable_answers": ["Azure"],
+      "evidence_ordinals": [2, 3]
+    },
+    {
+      "question": "What is the CEO personal phone number?",
+      "answer_status": "not_found",
+      "acceptable_answers": [],
+      "evidence_ordinals": []
+    }
+  ]
+}

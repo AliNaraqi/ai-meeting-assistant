@@ -1,0 +1,7 @@
+{
+  "fixture_id": "mtg_001",
+  "one_sentence_summary_contains": ["discussion", "next steps"],
+  "must_have_decision_keywords": ["Azure"],
+  "must_have_action_keywords": ["dataset"],
+  "require_evidence": true
+}

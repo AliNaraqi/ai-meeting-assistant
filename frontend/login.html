@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign in · AI Meeting Assistant</title>
+    <script src="/static/js/theme-boot.js"></script>
+    <link rel="stylesheet" href="/static/css/tokens.css" />
+    <link rel="stylesheet" href="/static/css/base.css" />
+    <link rel="stylesheet" href="/static/css/components.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <p class="brand"><a href="/">AI Meeting Assistant</a></p>
+      <nav class="site-nav" aria-label="Sign in">
+        <button type="button" id="theme-toggle" class="button-quiet">Theme</button>
+      </nav>
+    </header>
+
+    <main id="main" class="auth-panel">
+      <h1>Sign in</h1>
+      <p class="hero-lead">
+        Local development uses a secure dev login. Production will use Supabase Auth.
+      </p>
+      <form id="login-form" class="stack-form" novalidate>
+        <label for="email">Email</label>
+        <input id="email" type="email" name="email" required autocomplete="username" />
+        <label for="display_name">Display name</label>
+        <input
+          id="display_name"
+          type="text"
+          name="display_name"
+          maxlength="200"
+          autocomplete="nickname"
+        />
+        <p id="login-error" class="form-error" role="alert" aria-live="assertive" hidden></p>
+        <button type="submit" class="button-primary">Continue</button>
+      </form>
+      <p class="fine-print">
+        Obtain informed consent from every participant before recording. Audio stays private by
+        default.
+      </p>
+    </main>
+
+    <script type="module">
+      import { setText } from "/static/js/ui.js";
+      import { initThemeToggle } from "/static/js/theme.js";
+      import { devLogin } from "/static/js/auth.js";
+      import { getStoredToken } from "/static/js/api.js";
+
+      initThemeToggle();
+
+      if (getStoredToken()) {
+        window.location.href = "/app";
+      }
+
+      document.getElementById("login-form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const form = event.currentTarget;
+        const errorEl = document.getElementById("login-error");
+        try {
+          await devLogin(form.email.value.trim(), form.display_name.value.trim());
+          window.location.href = "/app";
+        } catch (error) {
+          setText(errorEl, error.message || "Sign-in failed.");
+          errorEl.hidden = false;
+        }
+      });
+    </script>
+  </body>
+</html>

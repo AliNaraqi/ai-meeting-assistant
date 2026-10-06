@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meeting · AI Meeting Assistant</title>
+    <script src="/static/js/theme-boot.js"></script>
+    <link rel="stylesheet" href="/static/css/tokens.css" />
+    <link rel="stylesheet" href="/static/css/base.css" />
+    <link rel="stylesheet" href="/static/css/components.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <p class="brand"><a href="/app">AI Meeting Assistant</a></p>
+      <nav class="site-nav" aria-label="Meeting">
+        <a href="/app">Dashboard</a>
+        <button type="button" id="btn-shortcuts" class="button-quiet" title="Keyboard shortcuts">
+          ?
+        </button>
+        <span id="user-email" class="user-chip"></span>
+        <button type="button" id="theme-toggle" class="button-quiet">Theme</button>
+        <button type="button" id="sign-out" class="button-quiet">Sign out</button>
+      </nav>
+    </header>
+
+    <main id="main" class="dashboard">
+      <p id="demo-banner" class="hero-note" hidden style="margin: 1rem 1.5rem 0">
+        Shared demo meeting — explore transcript, insights, Q&amp;A, and export. Editing is disabled.
+      </p>
+      <div id="workspace-loading"></div>
+      <section class="dashboard-intro">
+        <h1 id="meeting-title">Meeting</h1>
+        <p id="meeting-meta" class="hero-lead"></p>
+        <p class="shortcut-hint">Shortcuts: <kbd>j</kbd>/<kbd>k</kbd> segments · <kbd>space</kbd> play · <kbd>/</kbd> search · <kbd>?</kbd> help</p>
+        <div class="button-row">
+          <button type="button" id="btn-export-md" class="button-quiet">Export Markdown</button>
+          <button type="button" id="btn-export-json" class="button-quiet">Export JSON</button>
+          <button type="button" id="btn-export-slack" class="button-quiet">Export Slack</button>
+          <button type="button" id="btn-export-notion" class="button-quiet">Export Notion</button>
+          <button type="button" id="btn-export-csv" class="button-quiet">Actions CSV</button>
+          <button type="button" id="btn-share" class="button-quiet">Create share link</button>
+          <button type="button" id="btn-delete" class="button-quiet">Delete meeting</button>
+        </div>
+        <p id="share-status" class="meeting-meta" aria-live="polite"></p>
+      </section>
+
+      <p id="page-error" class="form-error" role="alert" aria-live="assertive" hidden></p>
+
+      <section class="panel stack-form" aria-labelledby="audio-heading">
+        <h2 id="audio-heading">Audio</h2>
+        <audio id="player" controls style="width: 100%"></audio>
+        <p id="audio-status" class="meeting-meta">Loading audio…</p>
+        <div id="audio-empty"></div>
+      </section>
+
+      <section class="dashboard-grid" style="margin-top: 1.5rem">
+        <div class="panel stack-form">
+          <h2>Transcript</h2>
+          <label>
+            Search
+            <input id="search-input" type="search" placeholder="Find text or speaker…" />
+          </label>
+          <div class="button-row">
+            <input id="rename-label" type="text" placeholder="speaker_0" />
+            <input id="rename-name" type="text" placeholder="Display name" />
+            <button type="button" id="btn-rename" class="button-quiet">Rename speaker</button>
+          </div>
+          <div id="transcript-empty"></div>
+          <ul id="transcript-list" class="meeting-list"></ul>
+        </div>
+
+        <div class="panel stack-form">
+          <h2>Overview</h2>
+          <div id="insights-empty"></div>
+          <div id="insight-summary"></div>
+          <h3>Decisions</h3>
+          <ul id="insight-decisions" class="meeting-list"></ul>
+          <h3>Actions</h3>
+          <ul id="insight-actions" class="meeting-list"></ul>
+        </div>
+      </section>
+
+      <section class="panel stack-form" style="margin-top: 1.5rem" aria-labelledby="ask-heading">
+        <h2 id="ask-heading">Ask this meeting</h2>
+        <p class="meeting-meta">Answers use only this meeting’s transcript and cite evidence.</p>
+        <div id="chat-empty"></div>
+        <ul id="chat-list" class="meeting-list" aria-live="polite"></ul>
+        <form id="ask-form" class="stack-form">
+          <label for="ask-input">Question</label>
+          <input
+            id="ask-input"
+            type="text"
+            maxlength="2000"
+            placeholder="Who owns the dataset update?"
+            required
+          />
+          <button type="submit" class="button-primary">Ask</button>
+        </form>
+      </section>
+    </main>
+
+    <div id="shortcut-overlay" class="shortcut-overlay" hidden>
+      <div class="shortcut-card" role="dialog" aria-modal="true" aria-labelledby="shortcut-title">
+        <h2 id="shortcut-title">Keyboard shortcuts</h2>
+        <ul class="shortcut-list">
+          <li><span>Next segment</span><kbd>j</kbd></li>
+          <li><span>Previous segment</span><kbd>k</kbd></li>
+          <li><span>Play / pause</span><kbd>space</kbd></li>
+          <li><span>Focus search</span><kbd>/</kbd></li>
+          <li><span>This cheatsheet</span><kbd>?</kbd></li>
+          <li><span>Close</span><kbd>esc</kbd></li>
+        </ul>
+        <p class="shortcut-hint">Shortcuts are ignored while typing in inputs.</p>
+        <button type="button" id="shortcut-close" class="button-primary">Close</button>
+      </div>
+    </div>
+
+    <script type="module" src="/static/js/meeting.js"></script>
+  </body>
+</html>

@@ -1,0 +1,52 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+        args: ["--maxkb=1024"]
+      - id: check-merge-conflict
+      - id: detect-private-key
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.9.4
+    hooks:
+      - id: ruff
+        args: ["--fix"]
+        files: ^backend/
+      - id: ruff-format
+        files: ^backend/
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.14.1
+    hooks:
+      - id: mypy
+        additional_dependencies:
+          - pydantic>=2.10
+          - pydantic-settings>=2.6
+          - types-redis
+        args: ["--config-file=backend/pyproject.toml"]
+        files: ^backend/app/
+
+  - repo: local
+    hooks:
+      - id: frontend-prettier
+        name: prettier (frontend)
+        entry: npx --yes prettier@3.4.2 --write
+        language: node
+        files: ^frontend/.*\.(js|css|html|json)$
+        pass_filenames: true
+      - id: frontend-eslint
+        name: eslint (frontend)
+        entry: bash
+        args:
+          - -lc
+          - |
+            cd frontend
+            if [ ! -d node_modules ]; then npm install --ignore-scripts; fi
+            npx eslint "js/**/*.js"
+        language: system
+        files: ^frontend/js/.*\.js$
+        pass_filenames: false

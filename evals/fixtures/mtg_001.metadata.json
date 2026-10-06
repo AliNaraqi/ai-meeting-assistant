@@ -1,0 +1,12 @@
+{
+  "fixture_id": "mtg_001",
+  "title": "Aurora project sync",
+  "meeting_type": "standup",
+  "language": "en",
+  "duration_ms": 16200,
+  "audio_condition": "clean",
+  "speaker_count": 2,
+  "accent_tags": ["synthetic"],
+  "license": "project-generated-synthetic",
+  "redistributable": true
+}
