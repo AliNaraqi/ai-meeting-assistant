@@ -10,6 +10,18 @@ Turn meeting audio into a speaker-aware transcript, grounded summaries, action i
 - **Structured insights** — decisions, owners, due dates, and evidence links
 - **Ask with citations** — answers grounded in the transcript, or an honest “not found”
 
+### Screenshots
+
+| Landing | Meeting workspace |
+| --- | --- |
+| ![Landing page](docs/screenshots/01-landing.png) | ![Meeting workspace](docs/screenshots/02-workspace.png) |
+
+| Grounded Q&A | Dashboard |
+| --- | --- |
+| ![Ask with citations](docs/screenshots/03-qa.png) | ![Meetings dashboard](docs/screenshots/04-dashboard.png) |
+
+![Ops status](docs/screenshots/05-status.png)
+
 ---
 
 ## Why this project
@@ -177,7 +189,7 @@ ai-meeting-assistant/
     ├── architecture.md
     ├── privacy.md
     ├── threat-model.md
-    └── screenshots/
+    └── screenshots/          # demo.gif + UI captures
 ```
 
 ## Try locally (free — no Docker / Redis / Postgres / OpenAI)
